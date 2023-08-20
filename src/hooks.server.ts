@@ -4,10 +4,10 @@ export async function handle({ event, resolve }) {
       return new Response('custom response');
     }
     
-    return await resolve(event);
+    return await resolve(event)
   }
 
   /** @type {import('@sveltejs/kit').HandleFetch} */
 export async function handleFetch({ event, request, fetch }) {
-    return fetch(request);
+    return fetch(request)
 }
