@@ -1,2 +1,17 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+    import Sidebar from "./Sidebar.svelte";
+    import "./+page.stylus"
+    import Infobar from "./Infobar.svelte";
+    import Workspace from "./Workspace.svelte";
+    import Footer from "./Footer.svelte";
+</script>
+
+<section class="app">
+    <Sidebar />
+    <Infobar />
+    <Workspace />
+    <Footer />
+</section>
+
+<style>
+</style>

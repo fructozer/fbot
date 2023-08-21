@@ -1,0 +1,16 @@
+body {
+    margin: 0
+    color: white
+}
+.app {
+    display: grid
+    width: 100vw;
+    height: 100vh;
+    grid-template-areas: "info info" "side work" "foot foot"
+    grid-template-rows: 60px 1fr 32px
+    grid-template-columns: 60px 1fr
+    .sidebar{   grid-area: side;}
+    .infobar{   grid-area: info;}
+    .workdpace{ grid-area: work;}
+    .footer{    grid-area: foot;}
+}
