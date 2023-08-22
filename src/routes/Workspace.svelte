@@ -2,7 +2,9 @@
     import { writable } from "svelte/store";
     import Switch from "./component/Switch.svelte"; 
     import Button from "./component/Button.svelte";
+    import InputText from "./component/InputText.svelte";
     const reconnect0 = writable(false)
+    const host = writable("example.com")
     const confirm = ()=>{
         alert("Confirm success!")
     }
@@ -11,6 +13,7 @@
     <div class="context">
         <br/>
         <Switch value={reconnect0}>Auto reconnect</Switch>
+        <InputText name={"host"} value={host}>Username</InputText>
         <Button active={confirm}>Confirm</Button>
     </div>
 </div>

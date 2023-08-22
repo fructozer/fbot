@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { writable, type Writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store"
     import angle from "$lib/assets/angle.png"
-    import CheckBox from "./CheckBox.svelte";
+    import CheckBox from "./CheckBox.svelte"
     export let table: string[]
     export let current: Writable<string>
     
