@@ -8,8 +8,8 @@ body {
     display: grid
     width: 100vw;
     height: 100vh;
-    grid-template-areas: "info info" "side work" "foot foot"
-    grid-template-rows: 60px 1fr 32px
+    grid-template-areas: "info info" "side work"
+    grid-template-rows: 60px calc(100vh - 60px)
     grid-template-columns: 60px 1fr
     .sidebar{   grid-area: side;}
     .infobar{   grid-area: info;}

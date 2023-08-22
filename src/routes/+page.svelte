@@ -11,7 +11,6 @@
 
 <section class="app">
     <Workspace />
-    <Footer />
     <Sidebar />
     <Infobar />
 </section>

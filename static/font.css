@@ -8,4 +8,21 @@ html{
     font-family: 'mojang';
     margin: 0;
     padding: 0;
+    word-spacing: 0.3em;
+}
+.size-error {
+    display: none;
+    background: #313234;
+    color: white;
+    margin: 0;
+    text-align: center;
+    line-height: 100vh;
+}
+@media screen and (max-height: 385px) {
+    body * {
+        display: none;
+    }
+    .size-error {
+        display: block;
+    }
 }

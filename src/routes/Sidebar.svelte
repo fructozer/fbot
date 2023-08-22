@@ -8,12 +8,11 @@
     import { writable } from "svelte/store";
 
     const tabs = {  
-        "home": home, 
-        "chat": chat, 
-        "task": task, 
-        "scheduler": scheduler, 
+        "home": home,
+        "chat": chat,
+        "scheduler": scheduler,
+        "task": task,
         "settings": settings}
-    type TabName = keyof typeof tabs
     const current = writable("home")
 
 </script>
