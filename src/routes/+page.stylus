@@ -1,8 +1,10 @@
+
 body {
     margin: 0
     color: white
 }
 .app {
+    background: #313234
     display: grid
     width: 100vw;
     height: 100vh;

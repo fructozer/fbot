@@ -5,12 +5,15 @@
     import Workspace from "./Workspace.svelte";
     import Footer from "./Footer.svelte";
 </script>
+<svelte:head>
+    <link rel="stylesheet" href="font.css">
+</svelte:head>
 
 <section class="app">
-    <Sidebar />
-    <Infobar />
     <Workspace />
     <Footer />
+    <Sidebar />
+    <Infobar />
 </section>
 
 <style>

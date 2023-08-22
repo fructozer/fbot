@@ -1,9 +1,37 @@
 <div class="workspace">
-    workspace
+    <div class="context">
+        <br/><br/>workspace
+    </div>
 </div>
 <style lang="stylus">
     .workspace{
-        background: #555
-        border: 2px yellow solid
+        background: #c6c6c6
+        display: flex
+        position: relative
+        z-index: 0
+        width: calc(100% - 20px)
+        height: calc(100% - 20px)
+        margin: 5px
+        border-top:     5px #f7f7f7 solid
+        border-left:    5px #f7f7f7 solid
+        border-bottom:  5px #626262 solid
+        border-right:   5px #626262 solid
+        outline: 5px solid black
+        border-radius: 15px
+        .context{
+            background: #0d0b0a
+            margin: 15px
+            border-radius: 10px
+            width: calc(100% - 10px - 30px)
+            height: calc(100% - 10px - 30px)
+            border-top:     5px #626262 solid
+            border-left:    5px #626262 solid
+            border-bottom:  5px #f7f7f7 solid
+            border-right:   5px #f7f7f7 solid
+        }
+    }
+
+    .context {
+        text-align: center
     }
 </style>

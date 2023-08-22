@@ -1,0 +1,11 @@
+
+@font-face {
+    font-family: 'mojang';
+    src: url('font/Mojang-Regular.ttf') format("truetype");
+    font-style: normal;
+}
+html{
+    font-family: 'mojang';
+    margin: 0;
+    padding: 0;
+}

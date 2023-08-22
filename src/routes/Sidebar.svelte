@@ -1,10 +1,39 @@
+<script lang="ts">
+    import home      from "$lib/assets/home.png"
+    import chat      from "$lib/assets/chat.png"
+    import task      from "$lib/assets/task.png"
+    import scheduler from "$lib/assets/scheduler.png"
+    import settings  from "$lib/assets/settings.png"
+    import TabButton from "./component/TabButton.svelte";
+    import { writable } from "svelte/store";
+
+    const tabs = {  
+        "home": home, 
+        "chat": chat, 
+        "task": task, 
+        "scheduler": scheduler, 
+        "settings": settings}
+    type TabName = keyof typeof tabs
+    const current = writable("home")
+
+</script>
+
 <div class="sidebar">
-    sidebar
+    {#each Object.keys(tabs) as tab}
+        <TabButton icon={tabs[tab]} name={tab} active={()=>{current.set(tab)}} enable={$current==tab}/>
+    {/each}
 </div>
 
 <style lang="stylus">
     .sidebar{
-        background: #555
-        border: 2px red solid
+        margin-top: 20px
+        background: #313234
+        position: relative
+        z-index: 10
+        .tab {
+            display: block
+            width: 32px
+            margin: 10px
+        }
     }
 </style>
