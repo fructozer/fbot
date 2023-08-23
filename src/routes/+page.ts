@@ -1,3 +1,4 @@
+import { writable } from 'svelte/store';
 import type { PageLoad } from './$types';
 import ioClient from 'socket.io-client';
 
@@ -7,7 +8,12 @@ export const load = (async () => {
     // io.on("chat", (username, message, )=>{
     //     console.log(message)
     // })
+
+    
     return {
-        success: true
+        success: true,
+        x: writable(15),
+        y: writable(41),
+        z: writable(68)
     };
 }) satisfies PageLoad;

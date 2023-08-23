@@ -1,33 +1,12 @@
-<script lang='ts'>
+<script lang="ts">
     import type { Writable } from "svelte/store";
-
-    export let name:string|null = null;
     export let value: Writable<any>
-    export let disable: boolean = false
-    export let inline: boolean = false
+    export let disable: boolean
 </script>
 
-<div class={inline?"inline":""}>
-    {#if name!=null}
-    <p><slot></slot></p>
-    {/if}
-    <input 
-        class={(name!=null).toString()} 
-        type="text" name={name} id={name} 
-        disabled={disable} bind:value={$value}>
-</div>
+<input type="text" disabled={disable} bind:value={$value}>
 
 <style lang='stylus'>
-    div {
-        margin: 1em
-        &.inline {
-            display: flex
-            gap: 8px
-        }
-    }
-    p {
-        margin-bottom: 0.25em
-    }
     input {
         height: 2.5em
         background: #5e5e5e
@@ -42,6 +21,7 @@
         color: white
         text-overflow: ellipsis
         width: calc( 100% - 1em )
+        text-align: center
         &:focus-visible {
             outline: none
             box-shadow: 0 0 10px black

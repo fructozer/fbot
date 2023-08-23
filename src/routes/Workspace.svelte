@@ -1,20 +1,23 @@
-<script>
-    import { writable } from "svelte/store";
-    import Switch from "./component/Switch.svelte"; 
-    import Button from "./component/Button.svelte";
-    import InputText from "./component/InputText.svelte";
-    const reconnect0 = writable(false)
-    const host = writable("example.com")
-    const confirm = ()=>{
-        alert("Confirm success!")
-    }
+<script lang='ts'>
+    import type { Writable } from "svelte/store";
+    import type { PageName } from "./workspace";
+    import Home from "./workspaces/Home.svelte";
+    import Chat from "./workspaces/Chat.svelte";
+    import Task from "./workspaces/Task.svelte";
+    import State from "./workspaces/State.svelte";
+    import Setting from "./workspaces/Setting.svelte";
+
+    export let current: Writable<PageName>
+    export let data: any
 </script>
 <div class="workspace">
     <div class="context">
-        <br/>
-        <Switch value={reconnect0}>Auto reconnect</Switch>
-        <InputText name={"host"} value={host}>Username</InputText>
-        <Button active={confirm}>Confirm</Button>
+        {#if $current=="home"}      <Home data={data}/>
+        {:else if $current=="chat"} <Chat data={data}/>
+        {:else if $current=="task"} <Task data={data}/>
+        {:else if $current=="state"}<State data={data}/>
+        {:else}                     <Setting data={data}/>
+        {/if}
     </div>
 </div>
 <style lang="stylus">
@@ -33,8 +36,8 @@
         outline: 5px solid black
         border-radius: 15px
         .context{
-            display: block
-            background: #313234
+            display: inline-block
+            background: #111
             margin: 15px
             border-radius: 10px
             width: calc(100% - 10px - 30px)

@@ -1,25 +1,15 @@
 <script lang="ts">
-    import home      from "$lib/assets/home.png"
-    import chat      from "$lib/assets/chat.png"
-    import task      from "$lib/assets/task.png"
-    import scheduler from "$lib/assets/scheduler.png"
-    import settings  from "$lib/assets/settings.png"
+    import type { Writable } from "svelte/store";
     import TabButton from "./component/TabButton.svelte";
-    import { writable } from "svelte/store";
+    import { keys, pages, type Pages } from "./workspace";
 
-    const tabs = {  
-        "home": home,
-        "chat": chat,
-        "scheduler": scheduler,
-        "task": task,
-        "settings": settings}
-    const current = writable("home")
-
+    export let current: Writable<string>
 </script>
 
 <div class="sidebar">
-    {#each Object.keys(tabs) as tab}
-        <TabButton icon={tabs[tab]} name={tab} active={()=>{current.set(tab)}} enable={$current==tab}/>
+    {#each keys as tab}
+    <!-- svelte-ignore a11y-autofocus -->
+    <TabButton icon={pages[tab].icon} name={tab} active={()=>{current.set(tab)}} enable={$current==tab}/>
     {/each}
 </div>
 

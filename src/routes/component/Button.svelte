@@ -3,7 +3,7 @@
 
 </script>
 
-<button>
+<button on:click={active}>
     <slot></slot>
 </button>
 
@@ -27,6 +27,7 @@
         font-size: 16px
         color: #4c4c4c
         transition-duration: 0.2s
+        width: calc( 100% - 2em)
         padding-inline: 1em
         &:hover{
             background: #208305
