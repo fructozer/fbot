@@ -4,6 +4,7 @@ import Container from "../component/Container.svelte";
     import InputText from "../component/InputText.svelte";
     import Button from "../component/Button.svelte";
     import InputSet from "../component/InputSet.svelte";
+    import Switch from "../component/Switch.svelte";
 
     export let data: any
 

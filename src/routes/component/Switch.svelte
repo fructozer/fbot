@@ -5,6 +5,7 @@
 </script>
 
 <div>
+    <p><slot></slot></p>
     <span 
         role={"button"} 
         class={"switcher "+$value.toString()} 
@@ -13,7 +14,6 @@
         <span class="node">
         </span>
     </span>
-    <p><slot></slot></p>
 </div>
 
 <style lang="stylus">
@@ -65,6 +65,7 @@
         }
     }
     div {
+        margin: 1em
         display: flex
         .switcher:hover{
             border-color: white

@@ -11,7 +11,7 @@
     button {
         z-index: 0
         display: block
-        cursor: default
+        cursor: pointer
         background: #c6c6c6
         height: 3em
         margin: 1em

@@ -1,8 +1,8 @@
 <script lang='ts'>
     export let title: string = ""
+    export let disable: boolean = false
 </script>
-<div>
-
+<div class={disable?"disable":""}>
     <p>{title}</p>
     <slot></slot>   
 </div>
@@ -15,6 +15,7 @@
         border-left:   4px #4a4a4a solid
         border-bottom: 4px #1e1e1e solid
         border-right:  4px #1e1e1e solid
+        cursor: default
         p {
             display: block
             margin: 1em
@@ -26,6 +27,10 @@
             p {
                 color: #ffd9b3
             }
+        }
+        &.disable{
+            filter: brightness(0.4)
+            pointer-events: none
         }
     }
 </style>
