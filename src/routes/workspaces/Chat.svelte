@@ -2,7 +2,7 @@
     import Console from "../component/Console.svelte";
     import Input from "../component/Input.svelte";
     import InputText from "../component/InputText.svelte";
-import { ConsoleLogger } from "../console";
+import { ConsoleLogger } from "../script/console";
 
     export let data: any
 

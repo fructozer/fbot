@@ -7,7 +7,7 @@
     import Infobar from "./Infobar.svelte";
     import Workspace from "./Workspace.svelte";
     import { writable, type Writable } from "svelte/store";
-    import type { PageName } from "./workspace";
+    import type { PageName } from "./script/workspace";
     
     export let data: any
     const currentPage:Writable<PageName> = writable("home")

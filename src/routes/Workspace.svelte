@@ -1,6 +1,6 @@
 <script lang='ts'>
     import type { Writable } from "svelte/store";
-    import type { PageName } from "./workspace";
+    import type { PageName } from "./script/workspace";
     import Home from "./workspaces/Home.svelte";
     import Chat from "./workspaces/Chat.svelte";
     import Task from "./workspaces/Task.svelte";

@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import TabButton from "./component/TabButton.svelte";
-    import { keys, pages, type Pages } from "./workspace";
+    import { keys, pages, type Pages } from "./script/workspace";
 
     export let current: Writable<string>
 </script>

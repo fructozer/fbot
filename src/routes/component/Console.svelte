@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Action } from "svelte/action";
-    import type { ConsoleLogger } from "../console";
+    import type { ConsoleLogger } from "../script/console";
 
     export let logger: ConsoleLogger;
     const output = logger.output;
