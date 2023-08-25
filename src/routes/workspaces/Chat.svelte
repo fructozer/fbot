@@ -1,22 +1,14 @@
 <script lang="ts">
+    import ChatInput from "../component/ChatInput.svelte";
     import Console from "../component/Console.svelte";
-    import Input from "../component/Input.svelte";
-    import InputText from "../component/InputText.svelte";
-import { ConsoleLogger } from "../script/console";
-
-    export let data: any
-
-    const logger = new ConsoleLogger()
-    let count = 0
-    setInterval(()=>{
-        count++
-        logger.log("Hello funayd! your logger is working #"+count)
-    }, 1000)
+    import type { BotSection } from "../script/bots";
+    export let section: BotSection
+    export let hiden: boolean
 </script>
 
-<div>
-    <Console logger={logger}/>
-    <InputText />
+<div style={hiden?"display: none":""}>
+    <Console logger={section.logger}/>
+    <ChatInput section={section}/>
 </div>
 
 <style lang='stylus'>

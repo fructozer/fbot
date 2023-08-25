@@ -1,29 +1,40 @@
 <script lang="ts">
-    import { writable } from "svelte/store";
-import Container from "../component/Container.svelte";
+    import { derived, writable } from "svelte/store";
+    import Container from "../component/Container.svelte";
     import InputText from "../component/InputText.svelte";
     import Button from "../component/Button.svelte";
+    import type { BotSection, ManagerData } from "../script/bots";
+    import Label from "../component/Label.svelte";
     import InputSet from "../component/InputSet.svelte";
-    import Switch from "../component/Switch.svelte";
-
-    export let data: any
-
-    const host = writable("example.com")
-    const port = writable(25565)
-    const x = data.x
-    const y = data.y
-    const z = data.z
-    const active = ()=> alert(`Process login to ${$host}:${$port}`)
+    export let section: BotSection;
+    export let hiden: boolean
+    let host =   section.host
+    let port =   section.port
+    let online = section.isOnline
+    let position = section.position
+    let pos = derived(position, $p=>[Math.round($p.x), Math.round($p.y), Math.round($p.z)])
+    const connect = ()=> {
+        section.start()
+    }
+    const disconnect = ()=> {
+        section.end()
+    }
 </script>
-<div class="home">
+
+<div class="home" style={hiden?"display: none":""}>
     <Container title="Server login">
         <InputText name="host" value={host}>Host</InputText>
         <InputText name="port" value={port}>Port</InputText>
-        <Button active={active}>Connect</Button>
+        {#if $online}
+        <Button color={0} active={disconnect}>Disconnect</Button>
+        {:else}
+        <Button color={100} active={connect}>Connect</Button>
+        {/if}
     </Container>
 
     <Container title="Infomation">
-        <InputSet value={[x,y,z]} inline disable>Position: </InputSet>
+        <Label value={[$online]} inline>Online: </Label>
+        <Label value={$pos} inline>Position: </Label>
     </Container>
 </div>
 <style lang='stylus'>

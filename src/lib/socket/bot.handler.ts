@@ -21,6 +21,16 @@ export default class BotManager{
         this.reject = ''
     }
 
+    setHost(host: string){
+        this.host = host
+    }
+    getHost(){
+        return this.host
+    }
+    setPort(port: number){
+        this.port = port
+    }
+
     get client(){
         if (this.bot==null) return null;
         return this.bot._client;
@@ -33,8 +43,9 @@ export default class BotManager{
         return this.socket!=null && this.socket.writable;
     }
     get location(){
-        if (!this.isOnline) return new Vec3(0,0,0)
-        return this.bot?.entity.position;
+        if (!this.isOnline) return {x:0,y:0,z:0}
+        const p = this.bot?.entity.position;
+        return {x:p?.x, y:p?.y, z:p?.z}
     }
     get health(){
         if (!this.isOnline) return 0;
@@ -47,14 +58,15 @@ export default class BotManager{
 
     /** @returns {Promise<boolean>}*/
     async start(){
-        let target = this.bot = mineflayer.createBot({
+        let target: mineflayer.Bot
+        try {
+         target = this.bot = mineflayer.createBot({
             username: this.username,
             host: this.host,
             port: this.port
         })
-        for (const e of events) target.on(e, (...args: any): void=>{
-            this.io.to(this.username).emit(e, ...args)
-        })
+        } catch (e) {return false}
+        createMidware(this)
         return new Promise(resolve=>{
             const success = async ()=>{
                 target.loadPlugin(pf.pathfinder)
@@ -71,6 +83,10 @@ export default class BotManager{
         })
     }
 
+    end(){
+        if (this.isOnline) this.bot?.end()
+    }
+
     goto(x: number, y: number, z: number){
         if (!this.isOnline) return new Promise((e)=>{});
         return this.bot?.pathfinder.goto(new pf.goals.GoalBlock(x,y,z))
@@ -81,4 +97,26 @@ export default class BotManager{
         this.bot?.chat(message);
     }
 
+    async tabComplete(message: string){
+        return await this.bot?.tabComplete(message)
+    }
+
+}
+
+function createMidware(manager: BotManager){
+    const bot  = manager.bot
+    const io   = manager.io
+    const name = manager.username
+    pass(manager, "login")
+    pass(manager, "end")
+    pass(manager, "move", manager.location)
+
+    bot?.on('message', (json: ChatMessage, position)=>{
+        io.to(name).emit('message', json.toString(), position, json.toHTML())
+    })
+}
+import type { BotEvents } from "mineflayer"
+import type { ChatMessage } from "prismarine-chat"
+function pass(manager:BotManager, event: keyof BotEvents, ...data:any){
+    manager.bot?.on(event, ()=>{manager.io.to(manager.bot!.username).emit(event, ...data)})
 }

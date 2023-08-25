@@ -1,29 +1,45 @@
 <script lang='ts'>
     import { writable, type Writable } from "svelte/store";
-    export let value: Writable<any> = writable("")
-    export let submit:(input: string)=>void = (e)=>{}
-    export let disable: boolean = false
-    const enter = (e: KeyboardEvent)=>{
+    import type { BotSection } from "../script/bots";
+    export let value: Writable<string> = writable("")
+    export let section: BotSection
+    const online = section.isOnline
+    const tabProcess = writable(false)
+    const tabList = writable([])
+    const tabIndex = writable(0)
+    const enter = async (e: KeyboardEvent)=>{
+        if (!$online) return
         if (e.key == "Enter") {
-            submit($value)
+            if ($value.length==0) return
+            section.chat($value)
             value.set("")
         }
+        else if (e.key == 'Tab') {
+            e.preventDefault()
+            if (!$tabProcess) {
+                tabList.set(await section.tab($value))
+            }
+
+        } 
+        else if ($tabProcess) {
+            tabProcess.set(false)
+        }
+    }
+    const tabReplace = ()=>{
+        
     }
     export let name:string|null = null;
     export let inline: boolean = false
 </script>
 
 <div class={inline?"inline":""}>
-    {#if name!=null}
-    <p><slot></slot></p>
-    {/if}
     <input 
         autocomplete="off"
         aria-autocomplete="both"
-        class={(name!=null).toString()} 
+        class={$online.toString()} 
         type="text" name={name} id={name} 
-        disabled={disable} bind:value={$value}
-        on:keypress={enter}>
+        disabled={!$online} bind:value={$value}
+        on:keydown={enter}>
 </div>
 
 <style lang='stylus'>
@@ -55,6 +71,12 @@
         &:focus-visible {
             outline: none
             box-shadow: 0 0 10px black
+        }
+        &.false{
+            border-bottom-color: #cc0000
+            border-top-color: #330000
+            background: #800000
+            filter: brightness(1) saturate(0.2)
         }
     }
 </style>

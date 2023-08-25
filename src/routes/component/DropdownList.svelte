@@ -6,7 +6,6 @@
     export let current: Writable<string>
     
     const open = writable(false)
-    const setCurrent = current.set
 </script>
 <div class="DropdownList" role={"combobox"} on:click={()=>{$open=!$open}}>
     <span class="current">{$current}
@@ -27,18 +26,16 @@
 
 <style lang="stylus">
     .DropdownList{
-        --root: 60px
-        --size: 30px
         z-index: 0
         display: block
         cursor: default
         background: #c6c6c6
-        height: var(--size)
-        width: calc(var(--size) * 7)
-        margin: calc((var(--root) - var(--size)) / 2)
-        padding-left calc(var(--size) / 2)
-        font-size: calc(var(--size) / 1.5)
-        line-height: var(--size)
+        font-size: 1.3rem
+        height: calc(3rem - 4px)
+        width: 15rem
+        margin: 1rem
+        padding-left 1rem
+        line-height: calc(3rem - 4px)
         border-top: 2px #f7f7f7 solid
         border-left: 2px #f7f7f7 solid
         border-bottom: 2px #626262 solid
@@ -55,11 +52,11 @@
         justify-content: space-between
         align-items: center
         img {
-        width 22px
-        height auto
-        image-rendering: pixelated
-        margin 10px
-    }
+            width 22px
+            height auto
+            image-rendering: pixelated
+            margin 10px
+        }
     }
     ul {
         z-index: 2
@@ -71,16 +68,16 @@
         border-bottom: 2px #f7f7f7 solid
         border-right: 2px #f7f7f7 solid
         outline: 2px solid black
-        width: calc(var(--size) * 7)
+        width: 16rem
         padding: 0px
-        padding-right: calc(var(--size) / 2)
-        margin-left: calc((var(--size) / -2) - 2px)
-        margin-top: calc((var(--size) / -1) - 4px)
+        padding-right: 0
+        margin-left: calc(-1rem - 2px)
+        margin-top: calc(-3rem + 2px)
 
         span{
             color: white
             width: calc(var(--size) * 7)
-            padding-left: calc(var(--size) / 2)
+            padding-left: 1rem
             &.true{
                 background: #4a484b
             }

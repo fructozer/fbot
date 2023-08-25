@@ -1,34 +1,35 @@
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
-    export let value: Writable<any> = writable("")
-    export let submit:(input: string)=>void = (e)=>{}
-    export let disable: boolean
+    export let submit: (info: string)=>void = (e)=>{}
+    export let cancel: ()=>void = ()=>{}
+    const data = writable("")
     const enter = (e: KeyboardEvent)=>{
+        console.log(e)
         if (e.key == "Enter") {
-            submit($value)
-            value.set("")
+            submit($data)
+            cancel()
         }
     }
 </script>
 
-<input type="text" disabled={disable} autocomplete="off" bind:value={$value} on:keypress={enter}>
+<input type="text" autocomplete="off" bind:value={$data} on:keypress={enter}>
 
 <style lang='stylus'>
     input {
-        height: 2.5em
+        font-size: 1em
+        height: calc(2.5em + 6px)
         background: #5e5e5e
-        margin: 0
+        margin: calc(1rem - 2px)
         border: 0
         padding: 0
         border-top: 3px solid #3e3c3f
         border-bottom: 3px solid #b2b2b2
         font-family: mojang
         padding-inline: 0.5em
-        font-size: 1em
         color: white
         text-overflow: ellipsis
-        width: calc( 100% - 1em )
-        text-align: center
+        width: 15rem
+        text-align: left
         &:focus-visible {
             outline: none
             box-shadow: 0 0 10px black

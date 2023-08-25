@@ -1,15 +1,10 @@
-import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 import type { PageLoad } from './$types';
-import ioClient from 'socket.io-client';
+import { BotManager } from './script/bots';
+export const ssr = false;
 
-export const load = (async () => {
-    const ENDPOINT = 'http://localhost:3000';
-    
-    
-    return {
-        success: true,
-        x: writable(15),
-        y: writable(41),
-        z: writable(68)
-    };
+export const load = (async () => { 
+    if (!browser) return {}
+    const manager = new BotManager()
+    return manager.getData()
 }) satisfies PageLoad;

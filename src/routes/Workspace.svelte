@@ -6,18 +6,20 @@
     import Task from "./workspaces/Task.svelte";
     import State from "./workspaces/State.svelte";
     import Setting from "./workspaces/Setting.svelte";
+    import type { BotSection, ManagerData } from "./script/bots";
 
     export let current: Writable<PageName>
-    export let data: any
+    export let section: BotSection
+    export let hiden: boolean
+    
 </script>
-<div class="workspace">
+<div class={hiden?"hiden ":""+"workspace"}>
     <div class="context">
-        {#if $current=="home"}      <Home data={data}/>
-        {:else if $current=="chat"} <Chat data={data}/>
-        {:else if $current=="task"} <Task data={data}/>
-        {:else if $current=="state"}<State data={data}/>
-        {:else}                     <Setting data={data}/>
-        {/if}
+        <Home    hiden={$current!="home"} section={section}/>
+        <Chat    hiden={$current!="chat"} section={section}/>
+        <Task    hiden={$current!="task"} section={section}/>
+        <State   hiden={$current!="state"} section={section}/>
+        <Setting hiden={$current!="setting"} section={section}/>
     </div>
 </div>
 <style lang="stylus">
@@ -48,5 +50,8 @@
             border-right:   5px #f7f7f7 solid
             overflow: auto 
         }
+    }
+    .hiden{
+        display: none
     }
 </style>

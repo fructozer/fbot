@@ -1,5 +1,7 @@
 <script lang="ts">
-    export let data: any
+    export let section: any
+    export let hiden: boolean
 </script>
-
-State
+<div style={hiden?"display: none":""}>
+    State
+</div>

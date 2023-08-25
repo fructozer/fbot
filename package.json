@@ -27,6 +27,7 @@
 		"mineflayer": "^4.12.0",
 		"mineflayer-pathfinder": "^2.4.4",
 		"mineflayer-statemachine": "^1.7.0",
+		"prismarine-chat": "^1.9.1",
 		"require": "^2.4.20",
 		"socket.io": "^4.7.2",
 		"socket.io-client": "^4.7.2"

@@ -1,10 +1,16 @@
-<script>
+<script lang='ts'>
     import favicon from "$lib/assets/favicon.png"
-    import { writable } from "svelte/store";
     import DropdownList from "./component/DropdownList.svelte";
-    const sellectable = ["funayd", "fbot", "just4test", "mother"]
-    const sellected = writable(sellectable[0])
-
+    import Button from "./component/Button.svelte";
+    import type { ManagerData } from "./script/bots";
+    import { writable } from "svelte/store";
+    import Input from "./component/Input.svelte";
+    import InfoInput from "./component/InfoInput.svelte";
+    export let data: ManagerData
+    const isCreateNewBot = writable(false)
+    const sellectable = data.bots
+    const sellected = data.current
+    const newBot = ()=>{isCreateNewBot.set(!$isCreateNewBot)}
 </script>
 
 <div class="infobar">
@@ -12,7 +18,19 @@
         <img src={favicon} alt="fbot">
         <span class="title">FBOT</span>
     </div>
-    <DropdownList table={sellectable} current={sellected} />
+    <div class="select">
+        {#if $isCreateNewBot}
+            <InfoInput submit={(e)=>{
+                sellectable.set([...$sellectable, e])
+                sellected.set(e)
+            }} cancel={()=>{$isCreateNewBot = false}}/>
+        {:else}
+            <DropdownList table={$sellectable} current={sellected} />
+        {/if}
+        <Button active={newBot} color={$isCreateNewBot?0:100} inline>
+            {#if $isCreateNewBot}x{:else}+{/if}
+        </Button>
+    </div>
 </div>
 
 
@@ -23,13 +41,17 @@
         justify-content: space-between
         .logo {
             display: flex
-            height: 50px
-            margin: 5px
+            height: 4rem
+            margin: 0.25rem
         }
         .title {
-            font-size: 25px
-            line-height: 50px
-            margin-left: 10px
+            font-size: 1.5rem
+            line-height: 4.5rem
+            margin-left: 1rem
+        }
+        .select {
+            display: flex
+            margin-right: 0.5rem
         }
     }
 </style>
