@@ -15,4 +15,6 @@ body {
     .infobar{   grid-area: info;}
     .workdpace{ grid-area: work;}
     .footer{    grid-area: foot;}
+    
+    
 }

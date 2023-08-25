@@ -56,6 +56,7 @@ export class BotSection{
     isOnline: Writable<boolean> = writable(false)
     position: Writable<Position> = writable(p0)
     logger: ConsoleLogger = new ConsoleLogger()
+    sendhistory: string[] = []
     constructor(username: string){
         this.io = io(ENDPOINT, {query:{name:username}})
         this.load()
@@ -76,7 +77,6 @@ export class BotSection{
             this.position.set(query[0])
         })
         this.io.on('message', (json, position, html)=>{
-            console.log(position)
             if (position == 'system' || position == 'chat'){
                 this.logger.log(html)
             }
@@ -96,6 +96,8 @@ export class BotSection{
     }
     chat(msg: string){
         this.execute("chat", [msg])
+        if (msg!=this.sendhistory[this.sendhistory.length-1])
+        this.sendhistory.push(msg)
     }
     start(){
         this.execute("start")
