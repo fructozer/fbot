@@ -3,7 +3,6 @@ import { log } from '$lib/ultility';
 
 const botSockets = new BotSockets();
 
-
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
   log("Call handler")

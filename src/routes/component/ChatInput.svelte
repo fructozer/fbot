@@ -101,11 +101,13 @@
         </span>
     {/if}
     <input use:rase
+        maxlength="2000"
         autocomplete="off"
         aria-autocomplete="both"
         class={$online.toString()} 
         type="text" name={name} id={name} 
         disabled={!$online} bind:value={$value}
+        placeholder={$online?"":"This bot is offline"}
         on:keydown={enter}>
 </form>
 
