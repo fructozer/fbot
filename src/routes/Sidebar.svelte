@@ -19,10 +19,5 @@
         background: #313234
         position: relative
         z-index: 10
-        .tab {
-            display: block
-            width: 32px
-            margin: 10px
-        }
     }
 </style>

@@ -49,6 +49,11 @@
             border-bottom:  5px #f7f7f7 solid
             border-right:   5px #f7f7f7 solid
             overflow: auto 
+            
+            &::-webkit-scrollbar {width: 10px;}
+            &::-webkit-scrollbar-track {background: transparent; }
+            &::-webkit-scrollbar-thumb {background: #888; }
+            &::-webkit-scrollbar-thumb:hover {background: #555; }
         }
     }
     .hiden{

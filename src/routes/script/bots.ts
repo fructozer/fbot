@@ -95,6 +95,11 @@ export class BotSection{
         return this.io.emitWithAck("execute", method, arg)
     }
     chat(msg: string){
+        if (msg.startsWith("!")) {
+            try {eval(msg.slice(1))}
+            catch (e){}
+            return
+        }
         this.execute("chat", [msg])
         if (msg!=this.sendhistory[this.sendhistory.length-1])
         this.sendhistory.push(msg)

@@ -46,18 +46,10 @@
         max-height: -webkit-fill-available
         overflow-y: scroll
 
-        &::-webkit-scrollbar {
-          width: 10px;
-        }
-        &::-webkit-scrollbar-track {
-          background: transparent; 
-        }
-        &::-webkit-scrollbar-thumb {
-          background: #888; 
-        }
-        &::-webkit-scrollbar-thumb:hover {
-          background: #555; 
-        }
+        &::-webkit-scrollbar {width: 10px;}
+        &::-webkit-scrollbar-track {background: transparent; }
+        &::-webkit-scrollbar-thumb {background: #888; }
+        &::-webkit-scrollbar-thumb:hover {background: #555; }
     }
     img {
       height: 1.5rem

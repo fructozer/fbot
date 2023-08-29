@@ -1,9 +1,12 @@
 <script lang='ts'>
     export let title: string = ""
+    export let name: string
     export let disable: boolean = false
 </script>
-<div class={disable?"disable":""}>
+<div class={(disable?"disable":"")+name} >
+    {#if title!=''}
     <p>{title}</p>
+    {/if}
     <slot></slot>   
 </div>
 <style lang='stylus'>

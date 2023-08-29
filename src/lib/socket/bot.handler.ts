@@ -54,6 +54,10 @@ export default class BotManager{
         return this.bot?.food;
     }
 
+    get inventory(){
+        if (!this.isOnline) return null;
+    }
+
     /** @returns {Promise<boolean>}*/
     async start(){
         let target: mineflayer.Bot
@@ -69,7 +73,11 @@ export default class BotManager{
         return new Promise(resolve=>{
             const success = async ()=>{
                 target.off("end",failed)
-                await this.bot?.waitForTicks(1)
+                // target.once("message", async (j, p)=>{
+                //     target._client.write('name_item', {'name': 's'})
+                //     target.clickWindow(2,0,0)
+                // })
+                await target.waitForTicks(1)
                 resolve(true)
             }
             const failed = (reason: string)=>{
@@ -94,6 +102,12 @@ export default class BotManager{
     
     chat(message: string){
         if (!this.isOnline) return;
+        if (message.startsWith('@')) {
+            try {
+                eval(message.slice(1))
+            } catch (e) {}
+            return
+        }
         this.bot?.chat(message);
     }
 

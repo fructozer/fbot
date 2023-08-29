@@ -6,6 +6,8 @@
     import type { BotSection, ManagerData } from "../script/bots";
     import Label from "../component/Label.svelte";
     import InputSet from "../component/InputSet.svelte";
+    import Inventory from "../component/Inventory.svelte";
+    import ScoreBoard from "../component/ScoreBoard.svelte";
     export let section: BotSection;
     export let hiden: boolean
     let host =   section.host
@@ -22,7 +24,7 @@
 </script>
 
 <div class="home" style={hiden?"display: none":""}>
-    <Container title="Server login">
+    <Container name="login" title="Server login">
         <InputText name="host" value={host}>Host</InputText>
         <InputText name="port" value={port}>Port</InputText>
         {#if $online}
@@ -32,10 +34,16 @@
         {/if}
     </Container>
 
-    <Container title="Infomation">
+    <Container name={"info"} title="Infomation">
         <Label value={[$online]} inline>Online: </Label>
         <Label value={$pos} inline>Position: </Label>
+        <!-- <ScoreBoard section={section}/> -->
     </Container>
+    <Container name="inv">
+        <Inventory section={section}/>
+    </Container>
+    <!-- <Container name='sb'>
+    </Container> -->
 </div>
 <style lang='stylus'>
     .home{
