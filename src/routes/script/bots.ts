@@ -1,6 +1,7 @@
 import { writable, type Readable, type Writable, derived, readable } from "svelte/store"
 import { Socket, io } from "socket.io-client";
 import { ConsoleLogger } from "./console";
+import { BotInventory } from "./inventory";
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -57,6 +58,8 @@ export class BotSection{
     position: Writable<Position> = writable(p0)
     logger: ConsoleLogger = new ConsoleLogger()
     sendhistory: string[] = []
+    version = '1.16.5'
+    inventory = writable(new BotInventory(this))
     constructor(username: string){
         this.io = io(ENDPOINT, {query:{name:username}})
         this.load()
@@ -84,12 +87,14 @@ export class BotSection{
     }
     async load(){
         const query = await this.io.emitWithAck("get-data", 
-            ["host", "port", "isOnline", "location"]
+            ["host", "port", "isOnline", "location", 'version']
         )
         this.host.set(query[0])
         this.port.set(query[1])
         this.isOnline.set(query[2])
         this.position.set(query[3])
+        this.inventory.set(new BotInventory(this))
+        this.version = query[4]
     }
     execute(method: string, arg:any[]=[]){
         return this.io.emitWithAck("execute", method, arg)

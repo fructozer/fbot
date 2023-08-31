@@ -5,11 +5,13 @@ import type { Vec3 } from 'vec3';
 import type { BotEvents } from "mineflayer"
 import type { ChatMessage } from "prismarine-chat"
 import { StateHandler } from "./state/state.handler"
+import type { Window } from "prismarine-windows";
+import { Socket } from "socket.io-client";
 
 export default class BotManager{
     stateHandler: StateHandler|null = null;
     bot: mineflayer.Bot|null = null
-    host: string = 'example.com'
+    host: string = 'funayd-test.serv.nu'
     port: number = 25565
     username: string
     reject: string = ''
@@ -56,6 +58,14 @@ export default class BotManager{
 
     get inventory(){
         if (!this.isOnline) return null;
+    }
+    get window(){
+        if (!this.isOnline) return null;
+        this.bot?.currentWindow
+    }
+    get version(){
+        if (!this.isOnline) return null;
+        return this.bot?.version
     }
 
     /** @returns {Promise<boolean>}*/
@@ -114,6 +124,10 @@ export default class BotManager{
     async tabComplete(message: string){
         return await this.bot?.tabComplete(message)
     }
+    closeWindow(window: Window<unknown>){
+        this.bot?.closeWindow(window)
+        this.io.to(this.username).emit("close_window")
+    }
 
 }
 
@@ -129,6 +143,12 @@ function createMidware(manager: BotManager){
     bot.on('message', (json: ChatMessage, position)=>{
         io.to(name).emit('message', json.toString(), position, json.toHTML())
     })
+    const invEvents = ["close_window","open_window","window_items","craft_progress_bar","set_slot"]
+    bot._client.on('packet', (data, meta)=>{
+        if (!(invEvents.includes(meta.name))) return
+        io.to(name).emit("inventory",meta.name,data)
+    })
+
     manager.stateHandler = new StateHandler(manager)
 }
 function pass(manager:BotManager, event: keyof BotEvents, ...data:any){
