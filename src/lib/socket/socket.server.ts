@@ -3,6 +3,7 @@ import express from 'express';
 import { Server } from 'socket.io';
 import BotManager from './bot.handler';
 import { port } from './config';
+import * as socketClient from "socket.io-client";
 
 export class BotSockets{
     sections: Map<string, BotManager>;
@@ -25,12 +26,39 @@ export class BotSockets{
     }
 }
 
+// check if port is available
+function checkPort(port: number, callback: ()=>void){
+    const server = http.createServer();
+    server.listen(port);
+    server.on('error', (err: any)=>{})
+    server.on('listening', ()=>{
+        server.close();
+        callback();
+    })
+}
+
+
 function initializeIO(port: number){
     const app = express();
     const server = http.createServer(app);
     const io = new Server(server)
-    server.listen(port, ()=>{
-        console.log(`Socket is running on http://localhost:${port}`);
+    const temp = socketClient.io(`http://localhost:${port}`)
+    const start = ()=>{
+        server.listen(port, () => {
+            console.log(`Socket is listening`);
+            temp.disconnect()
+        })
+    }
+    temp.on("connection", async ()=>{
+        await temp.emitWithAck("shutdown")
+        console.log("Socket shutdown")
+        if (!server.listening) start()
+    })
+    checkPort(port, start)
+    io.on("shutdown", (callback)=>{
+        server.close()
+        console.log("Socket is closed")
+        callback()
     })
     return {io: io, server: server};
 }
@@ -58,7 +86,10 @@ function createhandler(sockets: BotSockets){
         socket.on("execute", async (method: keyof BotManager, arg: any[], callback)=>{
             const s = sockets.getSection(name)
             const m = s[method]
-            if (typeof m != 'function') return
+            if (typeof m != 'function') {
+                console.log(`Cant not execute ${method} because method not found ${m}`)
+                return
+            }
             if (m instanceof asyncFunc)
             callback(await Reflect.apply(m, s, arg))
             else

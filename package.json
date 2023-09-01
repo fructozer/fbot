@@ -30,6 +30,7 @@
 		"mineflayer-web-inventory": "^1.8.4",
 		"prismarine-chat": "^1.9.1",
 		"prismarine-entity": "^2.2.0",
+		"prismarine-item": "^1.14.0",
 		"require": "^2.4.20",
 		"socket.io": "^4.7.2",
 		"socket.io-client": "^4.7.2"

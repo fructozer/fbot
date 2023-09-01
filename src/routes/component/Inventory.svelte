@@ -1,19 +1,15 @@
 <script lang="ts">
-    import { derived, writable, type Writable } from "svelte/store";
+    import { derived, writable } from "svelte/store";
     import type { BotSection } from "../script/bots";
-    import { InventoryMeta, type InventoryType } from "../script/inventory";
+    import { InventoryMeta } from "../script/inventory";
     import ItemSlot from "./ItemSlot.svelte";
 
     export let section: BotSection;
     const inv = section.inventory
     const meta = derived(inv, $i=>new InventoryMeta($i.type))
-    let url = writable("")
-    meta.subscribe(async m=>{
-        url.set(await m.url)
-    })
-    const invProp = derived(meta, $i=>{
+    const invProp = derived(meta, async $i=>{
         return {
-            style: `background: url(${$url}); 
+            style: `background: url(${await $i.url}); 
             background-repeat: no-repeat;
             image-rendering: pixelated;
             background-size: calc(100% /  ${$i.width/256});
@@ -21,8 +17,9 @@
         }
     }) 
 </script>
-
-<div class="inv" style={$invProp.style}>
+{#await $invProp}{:then prop}
+{#key inv}
+<div class="inv" style={prop.style}>
     {#each $meta.slots as slot}
         <span style={`
             display: block;
@@ -32,10 +29,12 @@
             top: calc(100% / ${$meta.height} * ${slot.pos.y});;
             left: calc(100% / ${$meta.width} * ${slot.pos.x});
         `}>
-        <ItemSlot data={$inv.getItem(slot.id)}/>
+        <ItemSlot data={$inv.getItem(slot.id)} slot={slot.id} inventory={$inv}/>
         </span>
     {/each}
 </div>
+{/key}
+{/await}
 
 <style lang='stylus'>
     .inv{

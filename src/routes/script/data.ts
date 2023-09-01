@@ -1,4 +1,4 @@
-export const inventory_id = {
+export const inventory_id:{[id: number]:string} = {
     7:"anvil",
     8:"beacon",
     9:"blast_furnace",

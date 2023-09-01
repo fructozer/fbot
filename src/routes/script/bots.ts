@@ -87,14 +87,17 @@ export class BotSection{
     }
     async load(){
         const query = await this.io.emitWithAck("get-data", 
-            ["host", "port", "isOnline", "location", 'version']
+            ["host", "port", "isOnline", "location", 'version', 'inventory']
         )
         this.host.set(query[0])
         this.port.set(query[1])
         this.isOnline.set(query[2])
         this.position.set(query[3])
-        this.inventory.set(new BotInventory(this))
         this.version = query[4]
+        const inv = new BotInventory(this)
+        inv.load(query[5])
+        this.inventory.set(inv)
+
     }
     execute(method: string, arg:any[]=[]){
         return this.io.emitWithAck("execute", method, arg)

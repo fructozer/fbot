@@ -7,6 +7,7 @@ import type { ChatMessage } from "prismarine-chat"
 import { StateHandler } from "./state/state.handler"
 import type { Window } from "prismarine-windows";
 import { Socket } from "socket.io-client";
+import type { Item } from "prismarine-item";
 
 export default class BotManager{
     stateHandler: StateHandler|null = null;
@@ -57,11 +58,26 @@ export default class BotManager{
     }
 
     get inventory(){
-        if (!this.isOnline) return null;
+        const inv:{type: string|number, title:string, slots:any[]} = {
+            type: 'inventory',
+            title: 'Crafting',
+            slots: []
+        }
+        let window = this.window
+        if (window==undefined) return inv;
+        inv.title = window.title;
+        inv.type = window.type;
+        inv.slots = window.slots.map(s=>s==null?{present: false}:{
+            present: true, 
+            itemId: s.type, 
+            itemCount: s.count, 
+            nbtData: s.nbt
+        })
+        return inv;
     }
     get window(){
         if (!this.isOnline) return null;
-        this.bot?.currentWindow
+        return this.bot?.currentWindow || this.bot?.inventory
     }
     get version(){
         if (!this.isOnline) return null;
@@ -76,7 +92,7 @@ export default class BotManager{
             username: this.username,
             host: this.host,
             port: this.port,
-            chatLengthLimit: 2000
+            chatLengthLimit: 2000,
         } as mineflayer.BotOptions)
         } catch (e) {return false}
         createMidware(this)
@@ -109,18 +125,18 @@ export default class BotManager{
         if (!this.isOnline) return new Promise((e)=>{});
         return this.bot?.pathfinder.goto(new pf.goals.GoalBlock(x,y,z))
     }
-    
     chat(message: string){
         if (!this.isOnline) return;
         if (message.startsWith('@')) {
             try {
                 eval(message.slice(1))
-            } catch (e) {}
+            } catch (e) {
+                console.log(e)
+            }
             return
         }
         this.bot?.chat(message);
     }
-
     async tabComplete(message: string){
         return await this.bot?.tabComplete(message)
     }
@@ -128,7 +144,13 @@ export default class BotManager{
         this.bot?.closeWindow(window)
         this.io.to(this.username).emit("close_window")
     }
-
+    async clickWindow(slot: number, mouseButton: number, mode: number){
+        if (!this.isOnline) return;
+        console.log(`click ${slot}`)
+        await this.bot?.clickWindow(slot, mouseButton, mode)
+        await this.bot?.waitForTicks(5)
+        return
+    }
 }
 
 function createMidware(manager: BotManager){
@@ -144,11 +166,18 @@ function createMidware(manager: BotManager){
         io.to(name).emit('message', json.toString(), position, json.toHTML())
     })
     const invEvents = ["close_window","open_window","window_items","craft_progress_bar","set_slot"]
+    const iconvert =  (s: any)=>s==null?
+    {present: false}:
+    {
+        present: true, 
+        itemId: s.type, 
+        itemCount: s.count, 
+        nbtData: s.nbt
+    }
     bot._client.on('packet', (data, meta)=>{
         if (!(invEvents.includes(meta.name))) return
         io.to(name).emit("inventory",meta.name,data)
     })
-
     manager.stateHandler = new StateHandler(manager)
 }
 function pass(manager:BotManager, event: keyof BotEvents, ...data:any){

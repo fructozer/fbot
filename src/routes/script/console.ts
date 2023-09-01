@@ -10,6 +10,7 @@ export class ConsoleLogger{
         this.maxHistory = 100
     }
     log(message: string){
+        message = message.replace(/§[0-9a-fk-or]/g,"")
         const l = this.consoleLog
         if (l.length+1 > this.maxHistory) l.splice(0,1)
         l.push(message)

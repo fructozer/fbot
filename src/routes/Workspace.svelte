@@ -49,6 +49,7 @@
             border-bottom:  5px #f7f7f7 solid
             border-right:   5px #f7f7f7 solid
             overflow: auto 
+            overflow-x: hidden
             
             &::-webkit-scrollbar {width: 10px;}
             &::-webkit-scrollbar-track {background: transparent; }

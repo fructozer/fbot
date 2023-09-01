@@ -216,11 +216,23 @@ export class InventoryMeta{
 }
 function genericSlot(a:number){
     return [
-        ...slots(1, 9*a, 7, 17),
-        ...vault(10, 7, 31+a*18)
+        ...slots(0, 9*a, 7, 17),
+        ...vault(9*a, 7, 31+a*18)
     ]
 }
 export class BotInventory{
+    async reload(){
+        const data = await this.section.io.emitWithAck("get-data", ["inventory"])
+        console.log(data)
+        this.load(data[0])
+        this.update()
+    }
+    load(data: {type: string|number, title:string, slots:any[]}) {
+        if (data==undefined || data==null) return
+        this.type = (typeof data.type=="string"?data.type.replace("minecraft:",""):inventory_id[data.type]) as InventoryType
+        this.title = data.title
+        this.slots = data.slots.map(d=>new BotItem(d, this.section.version))
+    }
     section: BotSection
     type: InventoryType = "inventory"
     title: string = ""
@@ -252,7 +264,9 @@ export class BotInventory{
         if (index>=this.slots.length) return new BotItem({present: false})
         return this.slots[index]
     }
-
+    async click(slot: number){
+        return this.section.execute("clickWindow", [slot,0,0])
+    }
     private p_setItem(data:{item:any, slot:number}) {
         if (data.slot>=this.slots.length) return
         this.slots[data.slot] = new BotItem(data.item, this.section.version)
