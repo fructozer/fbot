@@ -3,20 +3,27 @@ import { Socket, io } from "socket.io-client";
 import { ConsoleLogger } from "./console";
 import { BotInventory } from "./inventory";
 import type { CookieHandler } from "./cookie.handler";
+import { BotTask, BotTaskList } from "./task";
 
 const ENDPOINT = 'http://localhost:3000';
 
 export interface ManagerData {
     bots: Writable<string[]>,
     current: Writable<string>,
-    sections: Map<string,BotSection>
+    sections: Map<string,BotSection>,
+    tasks: Writable<BotTaskList>
 }
 export class BotManager{
     private bots: Writable<string[]> = writable([])
     private sections: Map<string,BotSection> = new Map()
     private currentSection: Writable<string> = writable("")
+    private taskList: Writable<BotTaskList> = writable(new BotTaskList());
     private cookie: CookieHandler;
     constructor(cookie: CookieHandler){
+        this.taskList.update((current) => {
+            current.writer = this.taskList;
+            return current;
+        })
         this.cookie = cookie
         this.load()
     }
@@ -26,6 +33,12 @@ export class BotManager{
         this.bots.subscribe(r => this.cookie.setArray('bots', r))
         this.currentSection.set(await this.cookie.getString('current'))
         this.currentSection.subscribe(r => this.cookie.setString('current', r))
+        const tasks = (await this.cookie.getArray('tasks')).map(BotTask.fromString)
+        this.taskList.update((current) => {
+            current.tasks = tasks;
+            return current;
+        })
+        this.taskList.subscribe(r => this.cookie.setArray('tasks', r.tasks.map(t => t.toString())))
     }
 
     add(username: string){
@@ -45,7 +58,8 @@ export class BotManager{
         return {
             bots: this.bots,
             current: this.currentSection,
-            sections: this.sections
+            sections: this.sections,
+            tasks: this.taskList
         } as ManagerData
     }
 }
@@ -69,6 +83,7 @@ export class BotSection{
     sendhistory: string[] = []
     version = '1.16.5'
     inventory = writable(new BotInventory(this))
+    tasks: any;
     constructor(username: string){
         // SetCookie("username", username)
         this.io = io(ENDPOINT, {query:{

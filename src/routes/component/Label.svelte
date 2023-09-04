@@ -37,6 +37,6 @@
         }
     }
     p {
-        margin-bottom: 0.25em
+        line-height: 46px
     }
 </style>

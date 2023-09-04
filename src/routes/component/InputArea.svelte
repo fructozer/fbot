@@ -1,6 +1,7 @@
 <script lang='ts'>
     import { writable, type Writable } from "svelte/store";
     export let value: Writable<any> = writable("")
+    export let submit:(input: string)=>void = (e)=>{}
     export let disable: boolean = false
     export let placeholder: string = ""
     export let name:string|null = null;
@@ -11,13 +12,13 @@
     {#if name!=null}
     <p><slot></slot></p>
     {/if}
-    <input 
+    <textarea 
         placeholder={placeholder}
         autocomplete="off"
         aria-autocomplete="both"
         class={(name!=null).toString()} 
-        type="text" name={name} id={name} 
-        disabled={disable} bind:value={$value}>
+        name={name} id={name} 
+        disabled={disable} bind:value={$value}/>
 </div>
 
 <style lang='stylus'>
@@ -31,7 +32,7 @@
     p {
         margin-bottom: 0.25em
     }
-    input {
+    textarea {
         height: 2.5em
         background: #5e5e5e
         margin: 0
@@ -46,9 +47,19 @@
         color: white
         text-overflow: ellipsis
         width: calc( 100% - 1em )
+        max-height: 25em
+        resize: vertical
+        cursor: default
         &:focus-visible {
             outline: none
             box-shadow: 0 0 10px black
         }
+        &::-webkit-scrollbar {
+            width: 10px;
+            cursor: pointer;
+        }
+        &::-webkit-scrollbar-track {background: transparent;}
+        &::-webkit-scrollbar-thumb {background: #888;}
+        &::-webkit-scrollbar-thumb:hover {background: white;}
     }
 </style>
