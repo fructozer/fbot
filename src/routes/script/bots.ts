@@ -2,6 +2,7 @@ import { writable, type Readable, type Writable, derived, readable } from "svelt
 import { Socket, io } from "socket.io-client";
 import { ConsoleLogger } from "./console";
 import { BotInventory } from "./inventory";
+import type { CookieHandler } from "./cookie.handler";
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -11,12 +12,20 @@ export interface ManagerData {
     sections: Map<string,BotSection>
 }
 export class BotManager{
-    private bots: Writable<string[]>
+    private bots: Writable<string[]> = writable([])
     private sections: Map<string,BotSection> = new Map()
-    private currentSection: Writable<string>
-    constructor(){
-        this.bots = writable(["funayd", "fbot", "demo"])
-        this.currentSection = writable("funayd")
+    private currentSection: Writable<string> = writable("")
+    private cookie: CookieHandler;
+    constructor(cookie: CookieHandler){
+        this.cookie = cookie
+        this.load()
+    }
+
+    async load(){
+        this.bots.set(await this.cookie.getArray('bots'))
+        this.bots.subscribe(r => this.cookie.setArray('bots', r))
+        this.currentSection.set(await this.cookie.getString('current'))
+        this.currentSection.subscribe(r => this.cookie.setString('current', r))
     }
 
     add(username: string){
@@ -61,7 +70,10 @@ export class BotSection{
     version = '1.16.5'
     inventory = writable(new BotInventory(this))
     constructor(username: string){
-        this.io = io(ENDPOINT, {query:{name:username}})
+        // SetCookie("username", username)
+        this.io = io(ENDPOINT, {query:{
+            name:username
+        }})
         this.load()
         this.host.subscribe(r =>{this.execute("setHost", [r])})
         this.port.subscribe(r =>{this.execute("setPort", [r])})

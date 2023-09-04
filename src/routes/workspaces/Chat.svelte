@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { getContext } from "svelte";
     import ChatInput from "../component/ChatInput.svelte";
     import Console from "../component/Console.svelte";
     import type { BotSection } from "../script/bots";
-    export let section: BotSection
+    export let section: BotSection = getContext("section");
     export let hiden: boolean
 </script>
 

@@ -9,13 +9,15 @@
     import { writable, type Writable } from "svelte/store";
     import type { PageName } from "./script/workspace";
     import { BotSection, type ManagerData } from "./script/bots";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, setContext } from "svelte";
     const currentPage:Writable<PageName> = writable("home")
     export let data: ManagerData
     const bots = data.bots
     const currentBot = data.current
     const dispatch = createEventDispatcher()
     currentPage.subscribe(tab => {dispatch("tab-change", tab)})
+    setContext("currentBot", currentBot)
+    setContext("bots", bots)
 </script>
 
 <section class="app">

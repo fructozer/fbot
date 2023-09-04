@@ -9,6 +9,7 @@
             value.set("")
         }
     }
+    export let placeholder: string = ""
     export let name:string|null = null;
     export let inline: boolean = false
 </script>
@@ -18,6 +19,7 @@
     <p><slot></slot></p>
     {/if}
     <input 
+        placeholder={placeholder}
         autocomplete="off"
         aria-autocomplete="both"
         class={(name!=null).toString()} 

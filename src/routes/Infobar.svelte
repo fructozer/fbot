@@ -4,8 +4,8 @@
     import Button from "./component/Button.svelte";
     import type { ManagerData } from "./script/bots";
     import { writable } from "svelte/store";
-    import Input from "./component/Input.svelte";
     import InfoInput from "./component/InfoInput.svelte";
+    import { keys } from "./script/workspace";
     export let data: ManagerData
     const isCreateNewBot = writable(false)
     const sellectable = data.bots
@@ -25,7 +25,13 @@
                 sellected.set(e)
             }} cancel={()=>{$isCreateNewBot = false}}/>
         {:else}
-            <DropdownList table={$sellectable} current={sellected} />
+            {#if $sellectable.length == 0 && !$isCreateNewBot}
+                <Button active={()=>{}} color={$isCreateNewBot?0:100} inline>
+                    No bot was created!
+                </Button>
+            {:else}
+                <DropdownList table={$sellectable} current={sellected} />
+            {/if}
         {/if}
         <Button active={newBot} color={$isCreateNewBot?0:100} inline>
             {#if $isCreateNewBot}x{:else}+{/if}

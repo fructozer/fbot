@@ -1,9 +1,10 @@
 import http from 'http';
 import express from 'express';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import BotManager from './bot.handler';
 import { port } from './config';
-import * as socketClient from "socket.io-client";
+import * as socketClient from "socket.io-client";   
+import { getData, setData } from './database';
 
 export class BotSockets{
     sections: Map<string, BotManager>;
@@ -41,39 +42,39 @@ function checkPort(port: number, callback: ()=>void){
 function initializeIO(port: number){
     const app = express();
     const server = http.createServer(app);
-    const io = new Server(server)
-    const temp = socketClient.io(`http://localhost:${port}`)
+    const io = new Server(server, {cookie: {
+        name: "fbot-socket"
+    }})
+    const temp = socketClient.connect(`http://localhost:${port}`, {query:{name:"api-server-checker"}})
     const start = ()=>{
         server.listen(port, () => {
-            console.log(`Socket is listening`);
             temp.disconnect()
         })
     }
-    temp.on("connection", async ()=>{
+    temp.once("connection", async ()=>{
         await temp.emitWithAck("shutdown")
-        console.log("Socket shutdown")
         if (!server.listening) start()
     })
     checkPort(port, start)
-    io.on("shutdown", (callback)=>{
-        server.close()
-        console.log("Socket is closed")
-        callback()
-    })
     return {io: io, server: server};
 }
 const asyncFunc = (async ()=>{}).constructor
 function createhandler(sockets: BotSockets){
     const io = sockets.io;
-    io.on('connection' , socket=>{
+
+    // bot handler
+    io.on('connection', socket=>{
         //@ts-ignore
         let name: string = socket.handshake.query.name
+        if (name == undefined || name == null) return
+        if (name.startsWith('api-')) {
+            api_handler(socket)
+            return
+        }
         socket.join(name)
         socket.emit("connection")
-        socket.on("disconnect", ()=>{
-            console.log(name+" listener is disconnected")
-        })        
-        console.log(name+" listener is connected ("+io.listenerCount("disconnect")+")") 
+        // socket.on("disconnect", ()=>{console.log(name+" listener is disconnected")})        
+        // console.log(name+" listener is connected") 
 
         socket.on("get-data", (attribute: (keyof BotManager)[], callback)=>{
             const result:any[] = []
@@ -95,7 +96,36 @@ function createhandler(sockets: BotSockets){
             else
             callback(Reflect.apply(m, s, arg))
         })
-    })
+
+        socket.on("shutdown", async (callback)=>{
+            sockets.server.close()
+            callback()
+        })
+    }
+    
+    
+    )
+    // api handler
+    function api_handler(socket: Socket){
+        let name = socket.handshake.query.name
+        if (name==undefined) return
+        name = name.toString()
+        if (!name.startsWith('api-')) return
+        if (name == 'api-cookie') {
+            let id = socket.handshake.query.id
+            if (id == undefined) return
+            socket.on("get-data", async (attr: string, callback)=>{
+                // @ts-ignore
+                const result: string =  await getData(id, attr)
+                if (callback!=null) callback(result);
+            })
+            socket.on("set-data", async (attr: string, value: string)=>{
+                console.log("set-data "+attr+" to "+value)
+                // @ts-ignore
+                setData(id, attr, value)
+            })
+        }
+    }
 }
 
 

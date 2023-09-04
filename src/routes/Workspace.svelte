@@ -1,5 +1,4 @@
 <script lang='ts'>
-    import type { Writable } from "svelte/store";
     import type { PageName } from "./script/workspace";
     import Home from "./workspaces/Home.svelte";
     import Chat from "./workspaces/Chat.svelte";
@@ -7,19 +6,21 @@
     import State from "./workspaces/State.svelte";
     import Setting from "./workspaces/Setting.svelte";
     import type { BotSection, ManagerData } from "./script/bots";
+    import { setContext } from "svelte";
+    import type { Writable } from "svelte/store";
 
     export let current: Writable<PageName>
     export let section: BotSection
     export let hiden: boolean
-    
+    setContext("section", section)
 </script>
 <div class={hiden?"hiden ":""+"workspace"}>
     <div class="context">
-        <Home    hiden={$current!="home"} section={section}/>
-        <Chat    hiden={$current!="chat"} section={section}/>
-        <Task    hiden={$current!="task"} section={section}/>
-        <State   hiden={$current!="state"} section={section}/>
-        <Setting hiden={$current!="setting"} section={section}/>
+        <Home    hiden={$current!="home"}/>
+        <Chat    hiden={$current!="chat"}/>
+        <Task    hiden={$current!="task"}/>
+        <State   hiden={$current!="state"}/>
+        <Setting hiden={$current!="setting"}/>
     </div>
 </div>
 <style lang="stylus">

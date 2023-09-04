@@ -28,6 +28,7 @@
         color: #4c4c4c
         transition-duration: 0.2s
         width: calc( 100% - 2em)
+        word-spacing: 0.3em
         padding-inline: 1em
         &:hover{
             background: #d64645

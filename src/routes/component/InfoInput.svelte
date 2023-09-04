@@ -4,7 +4,6 @@
     export let cancel: ()=>void = ()=>{}
     const data = writable("")
     const enter = (e: KeyboardEvent)=>{
-        console.log(e)
         if (e.key == "Enter") {
             submit($data)
             cancel()

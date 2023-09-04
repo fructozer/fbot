@@ -5,10 +5,9 @@
     import Button from "../component/Button.svelte";
     import type { BotSection, ManagerData } from "../script/bots";
     import Label from "../component/Label.svelte";
-    import InputSet from "../component/InputSet.svelte";
     import Inventory from "../component/Inventory.svelte";
-    import ScoreBoard from "../component/ScoreBoard.svelte";
-    export let section: BotSection;
+    import { getContext } from "svelte";
+    export let section: BotSection = getContext("section");
     export let hiden: boolean
     let host =   section.host
     let port =   section.port
